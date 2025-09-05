@@ -46,6 +46,14 @@ def main():
     Xn = (X - mu) / sd
 
     w = cfg.model_causal.get("encoder", cfg.model_causal).get("window", 256)
+    if X.shape[1] <= w:
+        w_new = max(1, X.shape[1] - 1)
+        print(f"[WARN] window {w} >= series length {X.shape[1]}; using window {w_new}")
+        if "encoder" in cfg.model_causal:
+            cfg.model_causal["encoder"]["window"] = w_new
+        else:
+            cfg.model_causal["window"] = w_new
+        w = w_new
     ds = WindowDataset(Xn, w=w, start=0, end=X.shape[1])
     dl = DataLoader(ds, batch_size=256, shuffle=False)
 
