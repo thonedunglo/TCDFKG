@@ -53,6 +53,14 @@ def main():
 
     # windows & loaders
     w = cfg.model_causal.get("encoder", cfg.model_causal).get("window", 256)  # fallback nếu cấu hình gộp
+    if cut <= w:
+        w_new = max(1, cut - 1)
+        print(f"[WARN] window {w} >= series length {cut}; using window {w_new}")
+        if "encoder" in cfg.model_causal:
+            cfg.model_causal["encoder"]["window"] = w_new
+        else:
+            cfg.model_causal["window"] = w_new
+        w = w_new
     manom = cfg.model_causal if "encoder" in cfg.model_causal else None
     enc_cfg = cfg.model_causal["encoder"] if "encoder" in cfg.model_causal else cfg.model_causal
     attn_cfg = cfg.model_causal["attention"] if "attention" in cfg.model_causal else {"dmax": 32, "bias_mlp_hidden": 16}
