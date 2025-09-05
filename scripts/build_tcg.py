@@ -40,6 +40,7 @@ def main():
                  device=cfg.device)
     model.fit(X, epochs=tcdf_cfg["epochs"], lr=tcdf_cfg["lr"], batch_size=tcdf_cfg["batch_size"], verbose=True)
     S_att = model.get_attention()
+    np.save(os.path.join(cfg.save_dir, "S_att.npy"), S_att)
 
     # 3) Delay estimation (TCDF saliency-based)
     d_hat = estimate_lags_tcdf_saliency(model, X, max_lag=tcdf_cfg["max_lag"])
