@@ -1,0 +1,95 @@
+# Schema Variables Description (SWaT-KG v0.2)
+
+## Plant
+- id: Định danh nhà máy
+- name: Tên nhà máy xử lý nước
+- stages: Danh sách Stage
+
+## Stage
+- id: Định danh công đoạn (P1..P6)
+- name: Tên công đoạn (Raw Water Intake, Pre-treatment, UF, Dechlorination, RO, Storage)
+- units: Danh sách Unit
+- procedures: Danh sách Procedure trong stage
+
+## Unit
+- id: Định danh unit
+- type: Loại unit (tank, uf_module, ro_module, uv_module,...)
+- components: Danh sách Component
+- sensors: Danh sách Sensor
+- actuators: Danh sách Actuator
+
+## Component
+- id: Định danh thành phần
+- name: Tên thành phần
+- type: Loại (tank, membrane, valve_body, ...)
+
+## Sensor
+- id: Định danh cảm biến (ví dụ LIT-101)
+- type: Loại cảm biến (level, flow, pressure, dp, ph, conductivity,...)
+- feature_type: Thuộc tính vật lý mà sensor đo
+- unit: Đơn vị đo
+
+## Actuator
+- id: Định danh actuator (ví dụ P-101, MV-101)
+- type: Loại actuator (pump, motorized_valve, uv_lamp, ...)
+- state: Các trạng thái hợp lệ (OFF|ON, CLOSED|OPEN, ...)
+
+## Procedure
+- id: Định danh quy trình
+- name: Tên quy trình
+- steps: Danh sách Step
+
+## Step
+- id: Định danh bước
+- name: Tên bước
+- inputs: Các điều kiện input (tham chiếu Setpoint hoặc điều kiện khái niệm như OUTSIDE_SPEC, WITHIN_RANGE)
+- outputs: Các hành động output (thay đổi actuator, mở/đóng van, bật/tắt bơm)
+
+## Control Layer
+- assets: Danh sách PLC, SCADA, HMI, Historian
+- network: Định nghĩa các segment mạng (Level 0, Level 1)
+- scada_tags: Ánh xạ tag SCADA tới sensor/actuator
+
+## FeatureType
+- id: Định danh
+- name: Tên đặc tính vật lý (Tank Level, Flow Rate, Pressure,...)
+- unit: Đơn vị đo (mm, L/min, bar, ...)
+
+## Setpoint
+- id: Định danh setpoint
+- name: Tên ngưỡng (ví dụ Low Level OK, High Differential Pressure)
+- applies_to: Sensor/feature áp dụng
+- feature_type: Loại đặc tính vật lý
+- level: Mức khái niệm (LL, L, H, HH, MIN_FLOW, HI,...)
+
+## Rule
+- id: Định danh rule
+- scope: Phạm vi áp dụng (stage, unit, component)
+- applies_to: Stage hoặc unit nào rule áp dụng
+- logic: Danh sách điều kiện (ref_setpoint, relation hoặc điều kiện khái niệm)
+- on_true: Hành động nếu điều kiện đúng (thay actuator, emit_event)
+
+## Event
+- id: Định danh event
+- category: Loại (safety, maintenance, alarm,...)
+- severity: Mức độ (info, warning, minor, major, critical)
+- description: Mô tả
+- sources: Sensor/feature hoặc rule kích hoạt
+- targets: Actuator/feature chịu ảnh hưởng
+
+## Attack
+- id: Định danh tấn công
+- type: Loại tấn công (SSSP, SSMP, MSSP, MSMP)
+- stage: Stage liên quan
+- points: Các sensor/actuator bị tác động
+- intent: Ý đồ tấn công
+- actions: Các hành động bất thường (ví dụ spoof, block, force – không có giá trị số)
+- expected_effects: Hệ quả mong đợi (overflow, underflow, stop pump,...)
+
+## Invariant
+- id: Định danh invariant
+- description: Mô tả ràng buộc vật lý khái niệm
+- applies_to: Loại sensor/actuator liên quan
+
+## Data Stream
+- modes: Các chế độ dữ liệu (normal, attack)

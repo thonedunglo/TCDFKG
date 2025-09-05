@@ -1,0 +1,172 @@
+{
+  "schema_version": "swat-kg.v0",
+  "plant": {
+    "id": "SWaT-Plant",
+    "name": "Secure Water Treatment (SWaT)",
+    "stages": [
+      {
+        "id": "P1",
+        "name": "Raw Water Intake",
+        "units": [
+          {
+            "id": "P1.U1",
+            "type": "tank",
+            "components": [
+              { "id": "P1.TK.RWT", "name": "Raw Water Tank", "type": "tank" }
+            ],
+            "sensors": [
+              { "id": "LIT-101", "type": "level", "feature_type": "level_mm", "unit": "mm" },
+              { "id": "FIT-101", "type": "flow",  "feature_type": "flow_lpm", "unit": "L/min" }
+            ],
+            "actuators": [
+              { "id": "MV-101", "type": "motorized_valve", "state": "CLOSED|OPEN" },
+              { "id": "P-101",  "type": "pump", "state": "OFF|ON" },
+              { "id": "P-102",  "type": "pump_backup", "state": "OFF|ON" }
+            ]
+          }
+        ],
+        "procedures": [
+          {
+            "id": "P1.FillCycle",
+            "name": "Fill Raw Tank",
+            "steps": [
+              { "id": "P1.S1", "name": "Open inlet valve", "inputs": [], "outputs": ["MV-101:OPEN"] },
+              { "id": "P1.S2", "name": "Start pump to P2 when level OK", "inputs": ["LIT-101>=LL_OK"], "outputs": ["P-101:ON"] }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "P3",
+        "name": "Ultrafiltration (UF)",
+        "units": [
+          {
+            "id": "P3.U1",
+            "type": "uf_module",
+            "components": [
+              { "id": "P3.UF.MOD1", "name": "UF Membrane Module", "type": "membrane" }
+            ],
+            "sensors": [
+              { "id": "LIT-301",  "type": "level", "feature_type": "level_mm", "unit": "mm" },
+              { "id": "FIT-301",  "type": "flow",  "feature_type": "flow_lpm", "unit": "L/min" },
+              { "id": "DPIT-301", "type": "dp",    "feature_type": "dp_bar",  "unit": "bar" }
+            ],
+            "actuators": [
+              { "id": "P-302",   "type": "pump", "state": "OFF|ON" },
+              { "id": "MV-301",  "type": "motorized_valve", "state": "CLOSED|OPEN" },
+              { "id": "MV-302",  "type": "motorized_valve", "state": "CLOSED|OPEN" },
+              { "id": "MV-303",  "type": "motorized_valve", "state": "CLOSED|OPEN" },
+              { "id": "MV-304",  "type": "motorized_valve", "state": "CLOSED|OPEN" }
+            ]
+          }
+        ],
+        "procedures": [
+          {
+            "id": "P3.FilterCycle",
+            "name": "UF Filter Cycle",
+            "steps": [
+              { "id": "P3.S1", "name": "Start UF feed", "inputs": ["LIT-301>=LL_OK"], "outputs": ["P-302:ON","MV-302:OPEN"] },
+              { "id": "P3.S2", "name": "Backwash if ΔP high", "inputs": ["DPIT-301>DP_HI"], "outputs": ["MV-301:OPEN","MV-303:OPEN","MV-304:OPEN"] }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+
+  "control_layer": {
+    "assets": [
+      { "id": "PLC-P1", "type": "PLC", "stage_ref": "P1" },
+      { "id": "PLC-P3", "type": "PLC", "stage_ref": "P3" },
+      { "id": "SCADA-1", "type": "SCADA" },
+      { "id": "HMI-1", "type": "HMI" },
+      { "id": "Historian-1", "type": "Historian" }
+    ],
+    "network": [
+      { "id": "NET-L1", "level": 1, "topology": "star", "connects": ["SCADA-1","PLC-P1","PLC-P3"] },
+      { "id": "NET-L0-P1", "level": 0, "topology": "ring", "connects": ["PLC-P1","LIT-101","FIT-101","P-101","P-102","MV-101"] },
+      { "id": "NET-L0-P3", "level": 0, "topology": "ring", "connects": ["PLC-P3","LIT-301","FIT-301","DPIT-301","P-302","MV-301","MV-302","MV-303","MV-304"] }
+    ],
+    "scada_tags": [
+      { "tag": "P1.LIT101", "binds": "LIT-101" },
+      { "tag": "P1.FIT101", "binds": "FIT-101" },
+      { "tag": "P1.MV101.CMD", "binds": "MV-101" },
+      { "tag": "P1.P101.CMD", "binds": "P-101" },
+
+      { "tag": "P3.LIT301", "binds": "LIT-301" },
+      { "tag": "P3.DPIT301", "binds": "DPIT-301" },
+      { "tag": "P3.P302.CMD", "binds": "P-302" }
+    ]
+  },
+
+  "feature_types": [
+    { "id": "level_mm", "name": "Tank Level", "unit": "mm", "range": [0, 1500] },
+    { "id": "flow_lpm", "name": "Flow Rate", "unit": "L/min" },
+    { "id": "dp_bar",   "name": "Differential Pressure", "unit": "bar" }
+  ],
+
+  "rules": [
+    {
+      "id": "R.P1.LowLevelPumpProtect",
+      "scope": "stage",
+      "applies_to": "P1",
+      "logic": [ { "sensor": "LIT-101", "feature_type": "level_mm", "op": "<=", "value": 300 } ],
+      "on_true": { "actions": [ { "actuator": "P-101", "set": "OFF" } ],
+                   "emit_event": "EV.P1.LowLevelTrip" }
+    },
+    {
+      "id": "R.P3.HighDPBackwash",
+      "scope": "stage",
+      "applies_to": "P3",
+      "logic": [ { "sensor": "DPIT-301", "feature_type": "dp_bar", "op": ">", "value": 0.8 } ],
+      "on_true": { "actions": [
+          { "actuator": "MV-301", "set": "OPEN" },
+          { "actuator": "MV-303", "set": "OPEN" },
+          { "actuator": "MV-304", "set": "OPEN" }
+        ],
+        "emit_event": "EV.P3.BackwashStart" }
+    },
+    {
+      "id": "R.P3.SafeStart",
+      "scope": "stage",
+      "applies_to": "P3",
+      "logic": [ { "sensor": "LIT-301", "feature_type": "level_mm", "op": ">=", "value": 500 } ],
+      "on_true": { "actions": [ { "actuator": "P-302", "set": "ON" } ] }
+    }
+  ],
+
+  "events": [
+    { "id": "EV.P1.LowLevelTrip", "category": "safety", "severity": "critical",
+      "description": "Raw tank level low; stop P-101 to protect pump" },
+    { "id": "EV.P3.BackwashStart", "category": "maintenance", "severity": "minor",
+      "description": "ΔP high on UF; initiate backwash cycle" }
+  ],
+
+  "attacks": [
+    {
+      "id": "A1.SSSP.LIT101-Overflow",
+      "type": "SSSP",
+      "stage": "P1",
+      "points": ["LIT-101", "P-101"],
+      "intent": "Overflow raw tank by spoofing level high while stopping outflow pump",
+      "labels": { "start": "2015-12-29T18:30:00", "end": "2015-12-29T18:42:00" },
+      "spoof": [ { "tag": "P1.LIT101", "value": 700 } ],
+      "expected_effects": [ "EV.P1.LowLevelTrip:false", "Level actually rising" ]
+    },
+    {
+      "id": "A2.SSSP.LIT301-Underflow",
+      "type": "SSSP",
+      "stage": "P3",
+      "points": ["LIT-301","P-302"],
+      "intent": "Underflow UF feed tank and risk pump damage by spoofing level high",
+      "labels": { "start": "2015-12-29T12:08:00", "end": "2015-12-29T12:15:00" },
+      "spoof": [ { "tag": "P3.LIT301", "value": 1100 } ],
+      "expected_effects": [ "P-302:ON while true level falls", "Plant throughput degrades" ]
+    }
+  ],
+
+  "data_stream": {
+    "sampling_period_sec": 1,
+    "modes": ["normal","attack"]
+  }
+}

@@ -1,0 +1,1953 @@
+{
+  "schema_version": "swat-kg.v0.2",
+  "plant": {
+    "id": "SWaT-Plant",
+    "name": "Secure Water Treatment (SWaT)",
+    "stages": [
+      {
+        "id": "P1",
+        "name": "Raw Water Intake",
+        "units": [
+          {
+            "id": "P1.U1",
+            "type": "tank",
+            "components": [
+              {
+                "id": "P1.TK.RWT",
+                "name": "Raw Water Tank",
+                "type": "tank"
+              }
+            ],
+            "sensors": [
+              {
+                "id": "LIT-101",
+                "type": "level",
+                "feature_type": "level_mm",
+                "unit": "mm"
+              },
+              {
+                "id": "FIT-101",
+                "type": "flow",
+                "feature_type": "flow_lpm",
+                "unit": "L/min"
+              }
+            ],
+            "actuators": [
+              {
+                "id": "MV-101",
+                "type": "motorized_valve",
+                "state": "CLOSED|OPEN"
+              },
+              {
+                "id": "P-101",
+                "type": "pump",
+                "state": "OFF|ON"
+              },
+              {
+                "id": "P-102",
+                "type": "pump_backup",
+                "state": "OFF|ON"
+              }
+            ]
+          }
+        ],
+        "procedures": [
+          {
+            "id": "P1.FillCycle",
+            "name": "Fill Raw Tank",
+            "steps": [
+              {
+                "id": "P1.S1",
+                "name": "Open inlet valve",
+                "inputs": [],
+                "outputs": [
+                  "MV-101:OPEN"
+                ]
+              },
+              {
+                "id": "P1.S2",
+                "name": "Start pump to P2 when level OK",
+                "inputs": [
+                  "SP.P1.LIT101.LL_OK"
+                ],
+                "outputs": [
+                  "P-101:ON"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "P2",
+        "name": "Pre-treatment (Chemical Dosing)",
+        "units": [
+          {
+            "id": "P2.U1",
+            "type": "dosing_station",
+            "components": [
+              {
+                "id": "P2.DS.SKID1",
+                "name": "Chemical Dosing Skid",
+                "type": "skid"
+              }
+            ],
+            "sensors": [
+              {
+                "id": "AIT-201",
+                "type": "conductivity",
+                "feature_type": "cond_uS_cm",
+                "unit": "uS/cm"
+              },
+              {
+                "id": "AIT-202",
+                "type": "ph",
+                "feature_type": "ph",
+                "unit": "pH"
+              },
+              {
+                "id": "AIT-203",
+                "type": "orp",
+                "feature_type": "orp_mV",
+                "unit": "mV"
+              },
+              {
+                "id": "FIT-201",
+                "type": "flow",
+                "feature_type": "flow_lpm",
+                "unit": "L/min"
+              }
+            ],
+            "actuators": [
+              {
+                "id": "MV-201",
+                "type": "motorized_valve",
+                "state": "CLOSED|OPEN"
+              },
+              {
+                "id": "P-201",
+                "type": "pump_dosing",
+                "state": "OFF|ON"
+              },
+              {
+                "id": "P-202",
+                "type": "pump_dosing_backup",
+                "state": "OFF|ON"
+              },
+              {
+                "id": "P-203",
+                "type": "pump_dosing",
+                "state": "OFF|ON"
+              },
+              {
+                "id": "P-204",
+                "type": "pump_dosing_backup",
+                "state": "OFF|ON"
+              },
+              {
+                "id": "P-205",
+                "type": "pump_dosing",
+                "state": "OFF|ON"
+              },
+              {
+                "id": "P-206",
+                "type": "pump_dosing_backup",
+                "state": "OFF|ON"
+              }
+            ]
+          }
+        ],
+        "procedures": [
+          {
+            "id": "P2.DosingCycle",
+            "name": "Chemical Dosing Control",
+            "steps": [
+              {
+                "id": "P2.S1",
+                "name": "Open flow to UF feed",
+                "inputs": [],
+                "outputs": [
+                  "MV-201:OPEN"
+                ]
+              },
+              {
+                "id": "P2.S2",
+                "name": "Adjust NaCl dosing by conductivity",
+                "inputs": [
+                  "SPEC.AIT-201.OUTSIDE_SPEC"
+                ],
+                "outputs": [
+                  "P-201:ON"
+                ]
+              },
+              {
+                "id": "P2.S3",
+                "name": "Adjust HCl dosing by pH",
+                "inputs": [
+                  "SPEC.AIT-202.OUTSIDE_SPEC"
+                ],
+                "outputs": [
+                  "P-203:ON"
+                ]
+              },
+              {
+                "id": "P2.S4",
+                "name": "Adjust NaOCl dosing by ORP",
+                "inputs": [
+                  "SPEC.AIT-203.OUTSIDE_SPEC"
+                ],
+                "outputs": [
+                  "P-205:ON"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "P3",
+        "name": "Ultrafiltration (UF)",
+        "units": [
+          {
+            "id": "P3.U1",
+            "type": "uf_module",
+            "components": [
+              {
+                "id": "P3.UF.MOD1",
+                "name": "UF Membrane Module",
+                "type": "membrane"
+              }
+            ],
+            "sensors": [
+              {
+                "id": "LIT-301",
+                "type": "level",
+                "feature_type": "level_mm",
+                "unit": "mm"
+              },
+              {
+                "id": "FIT-301",
+                "type": "flow",
+                "feature_type": "flow_lpm",
+                "unit": "L/min"
+              },
+              {
+                "id": "DPIT-301",
+                "type": "dp",
+                "feature_type": "dp_bar",
+                "unit": "bar"
+              }
+            ],
+            "actuators": [
+              {
+                "id": "P-302",
+                "type": "pump",
+                "state": "OFF|ON"
+              },
+              {
+                "id": "MV-301",
+                "type": "motorized_valve",
+                "state": "CLOSED|OPEN"
+              },
+              {
+                "id": "MV-302",
+                "type": "motorized_valve",
+                "state": "CLOSED|OPEN"
+              },
+              {
+                "id": "MV-303",
+                "type": "motorized_valve",
+                "state": "CLOSED|OPEN"
+              },
+              {
+                "id": "MV-304",
+                "type": "motorized_valve",
+                "state": "CLOSED|OPEN"
+              }
+            ]
+          }
+        ],
+        "procedures": [
+          {
+            "id": "P3.FilterCycle",
+            "name": "UF Filter Cycle",
+            "steps": [
+              {
+                "id": "P3.S1",
+                "name": "Start UF feed",
+                "inputs": [
+                  "SP.P3.LIT301.LL_OK"
+                ],
+                "outputs": [
+                  "P-302:ON",
+                  "MV-302:OPEN"
+                ]
+              },
+              {
+                "id": "P3.S2",
+                "name": "Backwash if ΔP high",
+                "inputs": [
+                  "SP.P3.DPIT301.HI"
+                ],
+                "outputs": [
+                  "MV-301:OPEN",
+                  "MV-303:OPEN",
+                  "MV-304:OPEN"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "P4",
+        "name": "Dechlorination (UV)",
+        "units": [
+          {
+            "id": "P4.U1",
+            "type": "uv_module",
+            "components": [
+              {
+                "id": "P4.UV.MOD1",
+                "name": "UV Dechlorination Unit",
+                "type": "uv_module"
+              },
+              {
+                "id": "P4.TK.ROFEED",
+                "name": "RO Feed Tank",
+                "type": "tank"
+              }
+            ],
+            "sensors": [
+              {
+                "id": "AIT-401",
+                "type": "hardness",
+                "feature_type": "hardness_mgL",
+                "unit": "mg/L"
+              },
+              {
+                "id": "AIT-402",
+                "type": "orp",
+                "feature_type": "orp_mV",
+                "unit": "mV"
+              },
+              {
+                "id": "FIT-401",
+                "type": "flow",
+                "feature_type": "flow_lpm",
+                "unit": "L/min"
+              },
+              {
+                "id": "LIT-401",
+                "type": "level",
+                "feature_type": "level_mm",
+                "unit": "mm"
+              }
+            ],
+            "actuators": [
+              {
+                "id": "P-401",
+                "type": "pump",
+                "state": "OFF|ON"
+              },
+              {
+                "id": "P-402",
+                "type": "pump",
+                "state": "OFF|ON"
+              },
+              {
+                "id": "P-403",
+                "type": "pump_dosing",
+                "state": "OFF|ON"
+              },
+              {
+                "id": "P-404",
+                "type": "pump_dosing_backup",
+                "state": "OFF|ON"
+              },
+              {
+                "id": "UV-401",
+                "type": "uv_lamp",
+                "state": "OFF|ON"
+              }
+            ]
+          }
+        ],
+        "procedures": [
+          {
+            "id": "P4.DechlorCycle",
+            "name": "UV Dechlorination",
+            "steps": [
+              {
+                "id": "P4.S1",
+                "name": "Start UV feed",
+                "inputs": [
+                  "LIT-401>=LL_OK"
+                ],
+                "outputs": [
+                  "P-402:ON"
+                ]
+              },
+              {
+                "id": "P4.S2",
+                "name": "Enable UV lamp",
+                "inputs": [
+                  "SP.P4.FIT401.MIN_FLOW"
+                ],
+                "outputs": [
+                  "UV-401:ON"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "P5",
+        "name": "Reverse Osmosis (RO)",
+        "units": [
+          {
+            "id": "P5.U1",
+            "type": "ro_module",
+            "components": [
+              {
+                "id": "P5.RO.MOD1",
+                "name": "RO Membrane Module",
+                "type": "membrane"
+              }
+            ],
+            "sensors": [
+              {
+                "id": "AIT-501",
+                "type": "ph",
+                "feature_type": "ph",
+                "unit": "pH"
+              },
+              {
+                "id": "AIT-502",
+                "type": "orp",
+                "feature_type": "orp_mV",
+                "unit": "mV"
+              },
+              {
+                "id": "AIT-503",
+                "type": "conductivity",
+                "feature_type": "cond_uS_cm",
+                "unit": "uS/cm"
+              },
+              {
+                "id": "AIT-504",
+                "type": "conductivity",
+                "feature_type": "cond_uS_cm",
+                "unit": "uS/cm"
+              },
+              {
+                "id": "FIT-501",
+                "type": "flow",
+                "feature_type": "flow_lpm",
+                "unit": "L/min"
+              },
+              {
+                "id": "FIT-502",
+                "type": "flow",
+                "feature_type": "flow_lpm",
+                "unit": "L/min"
+              },
+              {
+                "id": "FIT-503",
+                "type": "flow",
+                "feature_type": "flow_lpm",
+                "unit": "L/min"
+              },
+              {
+                "id": "FIT-504",
+                "type": "flow",
+                "feature_type": "flow_lpm",
+                "unit": "L/min"
+              },
+              {
+                "id": "PIT-501",
+                "type": "pressure",
+                "feature_type": "pressure_bar",
+                "unit": "bar"
+              },
+              {
+                "id": "PIT-502",
+                "type": "pressure",
+                "feature_type": "pressure_bar",
+                "unit": "bar"
+              },
+              {
+                "id": "PIT-503",
+                "type": "pressure",
+                "feature_type": "pressure_bar",
+                "unit": "bar"
+              }
+            ],
+            "actuators": [
+              {
+                "id": "P-501",
+                "type": "pump",
+                "state": "OFF|ON"
+              },
+              {
+                "id": "P-502",
+                "type": "pump_backup",
+                "state": "OFF|ON"
+              }
+            ]
+          }
+        ],
+        "procedures": [
+          {
+            "id": "P5.ROCycle",
+            "name": "RO Filtration",
+            "steps": [
+              {
+                "id": "P5.S1",
+                "name": "Start RO feed",
+                "inputs": [
+                  "SP.P4.FIT401.MIN_FLOW"
+                ],
+                "outputs": [
+                  "P-501:ON"
+                ]
+              },
+              {
+                "id": "P5.S2",
+                "name": "Monitor pressures and flows",
+                "inputs": [
+                  "SPEC.PIT-501.WITHIN_RANGE",
+                  "SPEC.FIT-502.WITHIN_RANGE"
+                ],
+                "outputs": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "P6",
+        "name": "Storage & Backwash/Recycle",
+        "units": [
+          {
+            "id": "P6.U1",
+            "type": "storage_subsystem",
+            "components": [
+              {
+                "id": "P6.TK.STORAGE",
+                "name": "Final Storage Tank",
+                "type": "tank"
+              },
+              {
+                "id": "P6.TK.BACKWASH",
+                "name": "UF Backwash Tank",
+                "type": "tank"
+              }
+            ],
+            "sensors": [
+              {
+                "id": "FIT-601",
+                "type": "flow",
+                "feature_type": "flow_lpm",
+                "unit": "L/min"
+              }
+            ],
+            "actuators": [
+              {
+                "id": "P-601",
+                "type": "pump",
+                "state": "OFF|ON"
+              },
+              {
+                "id": "P-602",
+                "type": "pump",
+                "state": "OFF|ON"
+              },
+              {
+                "id": "P-603",
+                "type": "pump",
+                "state": "OFF|ON"
+              }
+            ]
+          }
+        ],
+        "procedures": [
+          {
+            "id": "P6.RecycleBackwash",
+            "name": "Recycle / Backwash Handling",
+            "steps": [
+              {
+                "id": "P6.S1",
+                "name": "Recycle permeate to raw tank when required",
+                "inputs": [
+                  "COND.STORAGE_HIGH"
+                ],
+                "outputs": [
+                  "P-601:ON"
+                ]
+              },
+              {
+                "id": "P6.S2",
+                "name": "Run UF backwash pump",
+                "inputs": [
+                  "COND.BACKWASH_CYCLE_ACTIVE"
+                ],
+                "outputs": [
+                  "P-602:ON"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "control_layer": {
+    "assets": [
+      {
+        "id": "PLC-P1",
+        "type": "PLC",
+        "stage_ref": "P1"
+      },
+      {
+        "id": "PLC-P2",
+        "type": "PLC",
+        "stage_ref": "P2"
+      },
+      {
+        "id": "PLC-P3",
+        "type": "PLC",
+        "stage_ref": "P3"
+      },
+      {
+        "id": "PLC-P4",
+        "type": "PLC",
+        "stage_ref": "P4"
+      },
+      {
+        "id": "PLC-P5",
+        "type": "PLC",
+        "stage_ref": "P5"
+      },
+      {
+        "id": "PLC-P6",
+        "type": "PLC",
+        "stage_ref": "P6"
+      },
+      {
+        "id": "SCADA-1",
+        "type": "SCADA"
+      },
+      {
+        "id": "HMI-1",
+        "type": "HMI"
+      },
+      {
+        "id": "Historian-1",
+        "type": "Historian"
+      }
+    ],
+    "network": [
+      {
+        "id": "NET-L1",
+        "level": 1,
+        "topology": "star",
+        "connects": [
+          "SCADA-1",
+          "PLC-P1",
+          "PLC-P2",
+          "PLC-P3",
+          "PLC-P4",
+          "PLC-P5",
+          "PLC-P6"
+        ]
+      },
+      {
+        "id": "NET-L0-P1",
+        "level": 0,
+        "topology": "ring",
+        "connects": [
+          "PLC-P1",
+          "LIT-101",
+          "FIT-101",
+          "P-101",
+          "P-102",
+          "MV-101"
+        ]
+      },
+      {
+        "id": "NET-L0-P2",
+        "level": 0,
+        "topology": "ring",
+        "connects": [
+          "PLC-P2",
+          "AIT-201",
+          "AIT-202",
+          "AIT-203",
+          "FIT-201",
+          "MV-201",
+          "P-201",
+          "P-202",
+          "P-203",
+          "P-204",
+          "P-205",
+          "P-206"
+        ]
+      },
+      {
+        "id": "NET-L0-P3",
+        "level": 0,
+        "topology": "ring",
+        "connects": [
+          "PLC-P3",
+          "LIT-301",
+          "FIT-301",
+          "DPIT-301",
+          "P-302",
+          "MV-301",
+          "MV-302",
+          "MV-303",
+          "MV-304"
+        ]
+      },
+      {
+        "id": "NET-L0-P4",
+        "level": 0,
+        "topology": "ring",
+        "connects": [
+          "PLC-P4",
+          "LIT-401",
+          "FIT-401",
+          "AIT-401",
+          "AIT-402",
+          "P-401",
+          "P-402",
+          "P-403",
+          "P-404",
+          "UV-401"
+        ]
+      },
+      {
+        "id": "NET-L0-P5",
+        "level": 0,
+        "topology": "ring",
+        "connects": [
+          "PLC-P5",
+          "AIT-501",
+          "AIT-502",
+          "AIT-503",
+          "AIT-504",
+          "FIT-501",
+          "FIT-502",
+          "FIT-503",
+          "FIT-504",
+          "PIT-501",
+          "PIT-502",
+          "PIT-503",
+          "P-501",
+          "P-502"
+        ]
+      },
+      {
+        "id": "NET-L0-P6",
+        "level": 0,
+        "topology": "ring",
+        "connects": [
+          "PLC-P6",
+          "FIT-601",
+          "P-601",
+          "P-602",
+          "P-603"
+        ]
+      }
+    ],
+    "scada_tags": [
+      {
+        "tag": "P1.LIT101",
+        "binds": "LIT-101"
+      },
+      {
+        "tag": "P1.FIT101",
+        "binds": "FIT-101"
+      },
+      {
+        "tag": "P1.MV101.CMD",
+        "binds": "MV-101"
+      },
+      {
+        "tag": "P1.P101.CMD",
+        "binds": "P-101"
+      },
+      {
+        "tag": "P2.AIT201",
+        "binds": "AIT-201"
+      },
+      {
+        "tag": "P2.AIT202",
+        "binds": "AIT-202"
+      },
+      {
+        "tag": "P2.AIT203",
+        "binds": "AIT-203"
+      },
+      {
+        "tag": "P2.FIT201",
+        "binds": "FIT-201"
+      },
+      {
+        "tag": "P2.MV201.CMD",
+        "binds": "MV-201"
+      },
+      {
+        "tag": "P2.P201.CMD",
+        "binds": "P-201"
+      },
+      {
+        "tag": "P2.P203.CMD",
+        "binds": "P-203"
+      },
+      {
+        "tag": "P2.P205.CMD",
+        "binds": "P-205"
+      },
+      {
+        "tag": "P3.LIT301",
+        "binds": "LIT-301"
+      },
+      {
+        "tag": "P3.DPIT301",
+        "binds": "DPIT-301"
+      },
+      {
+        "tag": "P3.P302.CMD",
+        "binds": "P-302"
+      },
+      {
+        "tag": "P4.LIT401",
+        "binds": "LIT-401"
+      },
+      {
+        "tag": "P4.FIT401",
+        "binds": "FIT-401"
+      },
+      {
+        "tag": "P4.UV401.CMD",
+        "binds": "UV-401"
+      },
+      {
+        "tag": "P4.P402.CMD",
+        "binds": "P-402"
+      },
+      {
+        "tag": "P5.PIT501",
+        "binds": "PIT-501"
+      },
+      {
+        "tag": "P5.FIT501",
+        "binds": "FIT-501"
+      },
+      {
+        "tag": "P5.FIT502",
+        "binds": "FIT-502"
+      },
+      {
+        "tag": "P5.P501.CMD",
+        "binds": "P-501"
+      },
+      {
+        "tag": "P6.FIT601",
+        "binds": "FIT-601"
+      },
+      {
+        "tag": "P6.P601.CMD",
+        "binds": "P-601"
+      },
+      {
+        "tag": "P6.P602.CMD",
+        "binds": "P-602"
+      }
+    ]
+  },
+  "feature_types": [
+    {
+      "id": "level_mm",
+      "name": "Tank Level",
+      "unit": "mm"
+    },
+    {
+      "id": "flow_lpm",
+      "name": "Flow Rate",
+      "unit": "L/min"
+    },
+    {
+      "id": "dp_bar",
+      "name": "Differential Pressure",
+      "unit": "bar"
+    },
+    {
+      "id": "pressure_bar",
+      "name": "Pressure",
+      "unit": "bar"
+    },
+    {
+      "id": "ph",
+      "name": "Acidity (pH)",
+      "unit": "pH"
+    },
+    {
+      "id": "orp_mV",
+      "name": "Oxidation-Reduction Potential",
+      "unit": "mV"
+    },
+    {
+      "id": "cond_uS_cm",
+      "name": "Conductivity",
+      "unit": "uS/cm"
+    },
+    {
+      "id": "hardness_mgL",
+      "name": "Water Hardness",
+      "unit": "mg/L"
+    }
+  ],
+  "rules": [
+    {
+      "id": "R.P1.LowLevelPumpProtect",
+      "scope": "stage",
+      "applies_to": "P1",
+      "logic": [
+        {
+          "ref_setpoint": "SP.P1.LIT101.LL_OK",
+          "relation": "AT_OR_BELOW"
+        }
+      ],
+      "on_true": {
+        "actions": [
+          {
+            "actuator": "P-101",
+            "set": "OFF"
+          }
+        ],
+        "emit_event": "EV.P1.LowLevelTrip"
+      }
+    },
+    {
+      "id": "R.P3.HighDPBackwash",
+      "scope": "stage",
+      "applies_to": "P3",
+      "logic": [
+        {
+          "ref_setpoint": "SP.P3.DPIT301.HI",
+          "relation": "ABOVE"
+        }
+      ],
+      "on_true": {
+        "actions": [
+          {
+            "actuator": "MV-301",
+            "set": "OPEN"
+          },
+          {
+            "actuator": "MV-303",
+            "set": "OPEN"
+          },
+          {
+            "actuator": "MV-304",
+            "set": "OPEN"
+          }
+        ],
+        "emit_event": "EV.P3.BackwashStart"
+      }
+    },
+    {
+      "id": "R.P3.SafeStart",
+      "scope": "stage",
+      "applies_to": "P3",
+      "logic": [
+        {
+          "ref_setpoint": "SP.P3.LIT301.LL_OK",
+          "relation": "AT_OR_ABOVE"
+        }
+      ],
+      "on_true": {
+        "actions": [
+          {
+            "actuator": "P-302",
+            "set": "ON"
+          }
+        ]
+      }
+    }
+  ],
+  "events": [
+    {
+      "id": "EV.P1.LowLevelTrip",
+      "category": "safety",
+      "severity": "critical",
+      "description": "Raw tank level low; stop P-101 to protect pump"
+    },
+    {
+      "id": "EV.P3.BackwashStart",
+      "category": "maintenance",
+      "severity": "minor",
+      "description": "ΔP high on UF; initiate backwash cycle"
+    }
+  ],
+  "attacks": [
+    {
+      "id": "A01",
+      "type": "SSSP",
+      "stage": "P1",
+      "points": [
+        "MV-101"
+      ],
+      "intent": "Tank overflow",
+      "expected_effects": [
+        "Tank overflow"
+      ],
+      "actions": [
+        {
+          "action": "open"
+        }
+      ],
+      "actions_text": "Open MV-101",
+      "stages": [
+        "P1"
+      ]
+    },
+    {
+      "id": "A02",
+      "type": "SSSP",
+      "stage": "P1",
+      "points": [
+        "P-102"
+      ],
+      "intent": "Pipe bursts",
+      "expected_effects": [
+        "Pipe bursts"
+      ],
+      "actions": [
+        {
+          "action": "turn_on"
+        }
+      ],
+      "actions_text": "Turn on P-102",
+      "stages": [
+        "P1"
+      ]
+    },
+    {
+      "id": "A03",
+      "type": "SSSP",
+      "stage": "P1",
+      "points": [
+        "LIT-101"
+      ],
+      "intent": "Tank Underflow; Damage P-101",
+      "expected_effects": [
+        "Tank Underflow",
+        "Damage P-101"
+      ],
+      "actions": [
+        {
+          "action": "spoof_increase"
+        }
+      ],
+      "actions_text": "Increase by 1 mm every second",
+      "stages": [
+        "P1"
+      ]
+    },
+    {
+      "id": "A04",
+      "type": "SSSP",
+      "stage": "P5",
+      "points": [
+        "MV-504"
+      ],
+      "intent": "Halt RO shut down sequence; Reduce life of RO",
+      "expected_effects": [
+        "Halt RO shut down sequence",
+        "Reduce life of RO"
+      ],
+      "actions": [
+        {
+          "action": "open"
+        }
+      ],
+      "actions_text": "Open MV-504",
+      "unexpected_outcome": "No impact",
+      "stages": [
+        "P5"
+      ]
+    },
+    {
+      "id": "A05",
+      "type": "NPI",
+      "stage": "",
+      "points": [],
+      "intent": "unspecified",
+      "expected_effects": [],
+      "actions": [
+        {
+          "action": "unspecified"
+        }
+      ],
+      "actions_text": "No Physical Impact Attack"
+    },
+    {
+      "id": "A06",
+      "type": "SSSP",
+      "stage": "P2",
+      "points": [
+        "AIT-202"
+      ],
+      "intent": "P-203 turns off; Change in water quality",
+      "expected_effects": [
+        "P-203 turns off",
+        "Change in water quality"
+      ],
+      "actions": [
+        {
+          "action": "spoof_set"
+        }
+      ],
+      "actions_text": "Set value of AIT-202 as 6",
+      "unexpected_outcome": "Impact seen on AIT-504 after two hours at around 14:15. It increased above HH but Drainage did not start",
+      "stages": [
+        "P2"
+      ]
+    },
+    {
+      "id": "A07",
+      "type": "SSSP",
+      "stage": "P3",
+      "points": [
+        "LIT-301"
+      ],
+      "intent": "Stop of inflow; Tank underflow; Damage P-301",
+      "expected_effects": [
+        "Stop of inflow",
+        "Tank underflow",
+        "Damage P-301"
+      ],
+      "actions": [
+        {
+          "action": "spoof_increase"
+        }
+      ],
+      "actions_text": "Water level increased above HH",
+      "stages": [
+        "P3"
+      ]
+    },
+    {
+      "id": "A08",
+      "type": "SSSP",
+      "stage": "P3",
+      "points": [
+        "DPIT-301"
+      ],
+      "intent": "Backwash process is started again and again; Normal operation stops; Decrease in water level of tank 401. Increase in water level of tank 301",
+      "expected_effects": [
+        "Backwash process is started again and again",
+        "Normal operation stops",
+        "Decrease in water level of tank 401. Increase in water level of tank 301"
+      ],
+      "actions": [
+        {
+          "action": "spoof_set"
+        }
+      ],
+      "actions_text": "Set value of DPIT as >40kpa",
+      "stages": [
+        "P3"
+      ]
+    },
+    {
+      "id": "A09",
+      "type": "NPI",
+      "stage": "",
+      "points": [],
+      "intent": "unspecified",
+      "expected_effects": [],
+      "actions": [
+        {
+          "action": "unspecified"
+        }
+      ],
+      "actions_text": "No Physical Impact Attack"
+    },
+    {
+      "id": "A10",
+      "type": "SSSP",
+      "stage": "P4",
+      "points": [
+        "FIT-401"
+      ],
+      "intent": "UV shutdown; P-501 turns off",
+      "expected_effects": [
+        "UV shutdown",
+        "P-501 turns off"
+      ],
+      "actions": [
+        {
+          "action": "spoof_set"
+        }
+      ],
+      "actions_text": "Set value of FIT-401 as <0.7",
+      "unexpected_outcome": "UV did not shutdown; P-501 did not turn off",
+      "stages": [
+        "P4"
+      ]
+    },
+    {
+      "id": "A11",
+      "type": "SSSP",
+      "stage": "P4",
+      "points": [
+        "FIT-401"
+      ],
+      "intent": "UV shutdown; P-501 turns off",
+      "expected_effects": [
+        "UV shutdown",
+        "P-501 turns off"
+      ],
+      "actions": [
+        {
+          "action": "spoof_set"
+        }
+      ],
+      "actions_text": "Set value of FIT-401 as 0",
+      "stages": [
+        "P4"
+      ]
+    },
+    {
+      "id": "A12",
+      "type": "NPI",
+      "stage": "",
+      "points": [],
+      "intent": "unspecified",
+      "expected_effects": [],
+      "actions": [
+        {
+          "action": "unspecified"
+        }
+      ],
+      "actions_text": "No Physical Impact Attack"
+    },
+    {
+      "id": "A13",
+      "type": "SSSP",
+      "stage": "P3",
+      "points": [
+        "MV-304"
+      ],
+      "intent": "Halt of stage 3 because change in the backwash process",
+      "expected_effects": [
+        "Halt of stage 3 because change in the backwash process"
+      ],
+      "actions": [
+        {
+          "action": "close"
+        }
+      ],
+      "actions_text": "Close MV-304",
+      "unexpected_outcome": "UF Startup did not stop because MV-304 was closed late",
+      "stages": [
+        "P3"
+      ]
+    },
+    {
+      "id": "A14",
+      "type": "SSSP",
+      "stage": "P3",
+      "points": [
+        "MV-303"
+      ],
+      "intent": "Halt of stage 3 because change in the backwash process",
+      "expected_effects": [
+        "Halt of stage 3 because change in the backwash process"
+      ],
+      "actions": [
+        {
+          "action": "open"
+        },
+        {
+          "action": "block"
+        }
+      ],
+      "actions_text": "Do not let MV-303 open",
+      "unexpected_outcome": "Attack Failed because Startup sequence did not start because Tank 301 was already full",
+      "stages": [
+        "P3"
+      ]
+    },
+    {
+      "id": "A15",
+      "type": "NPI",
+      "stage": "",
+      "points": [],
+      "intent": "unspecified",
+      "expected_effects": [],
+      "actions": [
+        {
+          "action": "unspecified"
+        }
+      ],
+      "actions_text": "No Physical Impact Attack"
+    },
+    {
+      "id": "A16",
+      "type": "SSSP",
+      "stage": "P3",
+      "points": [
+        "LIT-301"
+      ],
+      "intent": "Tank Overflow",
+      "expected_effects": [
+        "Tank Overflow"
+      ],
+      "actions": [
+        {
+          "action": "spoof_decrease"
+        }
+      ],
+      "actions_text": "Decrease water level by 1mm each second",
+      "stages": [
+        "P3"
+      ]
+    },
+    {
+      "id": "A17",
+      "type": "SSSP",
+      "stage": "P3",
+      "points": [
+        "MV-303"
+      ],
+      "intent": "Halt of stage 3 because change in the backwash process",
+      "expected_effects": [
+        "Halt of stage 3 because change in the backwash process"
+      ],
+      "actions": [
+        {
+          "action": "open"
+        },
+        {
+          "action": "block"
+        }
+      ],
+      "actions_text": "Do not let MV-303 open",
+      "stages": [
+        "P3"
+      ]
+    },
+    {
+      "id": "A18",
+      "type": "NPI",
+      "stage": "",
+      "points": [],
+      "intent": "unspecified",
+      "expected_effects": [],
+      "actions": [
+        {
+          "action": "unspecified"
+        }
+      ],
+      "actions_text": "No Physical Impact Attack"
+    },
+    {
+      "id": "A19",
+      "type": "SSSP",
+      "stage": "P5",
+      "points": [
+        "AIT-504"
+      ],
+      "intent": "RO shut down sequence starts after 30 minutes. Water should go to drain.",
+      "expected_effects": [
+        "RO shut down sequence starts after 30 minutes. Water should go to drain."
+      ],
+      "actions": [
+        {
+          "action": "spoof_set"
+        }
+      ],
+      "actions_text": "Set value of AIT-504 to 16 uS/cm",
+      "unexpected_outcome": "RO did not shutdown; Water did not go to drain",
+      "stages": [
+        "P5"
+      ]
+    },
+    {
+      "id": "A20",
+      "type": "SSSP",
+      "stage": "P5",
+      "points": [
+        "AIT-504"
+      ],
+      "intent": "RO shut down sequence starts after 30 minutes. Water should go to drain.",
+      "expected_effects": [
+        "RO shut down sequence starts after 30 minutes. Water should go to drain."
+      ],
+      "actions": [
+        {
+          "action": "spoof_set"
+        }
+      ],
+      "actions_text": "Set value of AIT-504 to 255 uS/cm",
+      "unexpected_outcome": "RO did not shutdown; Water did not go to drain",
+      "stages": [
+        "P5"
+      ]
+    },
+    {
+      "id": "A21",
+      "type": "SSMP",
+      "stage": "P1",
+      "points": [
+        "MV-101",
+        "LIT-101"
+      ],
+      "intent": "Tank overflow",
+      "expected_effects": [
+        "Tank overflow"
+      ],
+      "actions": [
+        {
+          "action": "turn_on"
+        }
+      ],
+      "actions_text": "Keep MV-101 on continuously; Value of LIT-101 ...",
+      "stages": [
+        "P1"
+      ]
+    },
+    {
+      "id": "A22",
+      "type": "MSMP",
+      "stage": "MULTI",
+      "points": [
+        "UV-401",
+        "AIT-502",
+        "P-501"
+      ],
+      "intent": "Possible damage to RO",
+      "expected_effects": [
+        "Possible damage to RO"
+      ],
+      "actions": [
+        {
+          "action": "spoof_set"
+        }
+      ],
+      "actions_text": "Stop UV-401; Value of AIT-502 set as 150; Force P-501 on",
+      "unexpected_outcome": "P-501 could not be kept on; Reduced output at FIT-502",
+      "stages": [
+        "P4",
+        "P5"
+      ]
+    },
+    {
+      "id": "A23",
+      "type": "MSMP",
+      "stage": "MULTI",
+      "points": [
+        "P-602",
+        "DPIT-301",
+        "MV-302"
+      ],
+      "intent": "System freeze",
+      "expected_effects": [
+        "System freeze"
+      ],
+      "actions": [
+        {
+          "action": "turn_on"
+        },
+        {
+          "action": "spoof_set"
+        }
+      ],
+      "actions_text": "Value of DPIT-301 set to >0.4 bar; Keep MV-302 on; ...",
+      "stages": [
+        "P3",
+        "P6"
+      ]
+    },
+    {
+      "id": "A24",
+      "type": "SSMP",
+      "stage": "P2",
+      "points": [
+        "P-203",
+        "P-205"
+      ],
+      "intent": "Change in water quality",
+      "expected_effects": [
+        "Change in water quality"
+      ],
+      "actions": [
+        {
+          "action": "turn_off"
+        }
+      ],
+      "actions_text": "Turn off P-203 and P-205",
+      "unexpected_outcome": "Not much impact due to closure of P-101 because tank T-101 became full",
+      "stages": [
+        "P2"
+      ]
+    },
+    {
+      "id": "A25",
+      "type": "SSMP",
+      "stage": "P4",
+      "points": [
+        "LIT-401",
+        "P-401"
+      ],
+      "intent": "Tank underflow",
+      "expected_effects": [
+        "Tank underflow"
+      ],
+      "actions": [
+        {
+          "action": "turn_on"
+        },
+        {
+          "action": "spoof_set"
+        }
+      ],
+      "actions_text": "Set value of LIT-401 as 1000; Keep P-402 on",
+      "stages": [
+        "P4"
+      ]
+    },
+    {
+      "id": "A26",
+      "type": "MSMP",
+      "stage": "MULTI",
+      "points": [
+        "P-101",
+        "LIT-301"
+      ],
+      "intent": "Tank 101 underflow; Tank 301 overflow",
+      "expected_effects": [
+        "Tank 101 underflow",
+        "Tank 301 overflow"
+      ],
+      "actions": [
+        {
+          "action": "turn_on"
+        },
+        {
+          "action": "spoof_set"
+        }
+      ],
+      "actions_text": "Turn on P-101 continuously; Set value of LIT-301 ...",
+      "stages": [
+        "P1",
+        "P3"
+      ]
+    },
+    {
+      "id": "A27",
+      "type": "MSMP",
+      "stage": "MULTI",
+      "points": [
+        "P-302",
+        "LIT-401"
+      ],
+      "intent": "Tank overflow",
+      "expected_effects": [
+        "Tank overflow"
+      ],
+      "actions": [
+        {
+          "action": "turn_on"
+        },
+        {
+          "action": "spoof_set"
+        }
+      ],
+      "actions_text": "Keep P-302 on continuously; Set LIT-401 ...",
+      "stages": [
+        "P3",
+        "P4"
+      ]
+    },
+    {
+      "id": "A28",
+      "type": "SSSP",
+      "stage": "P3",
+      "points": [
+        "P-302"
+      ],
+      "intent": "Stop inflow of tank T-401",
+      "expected_effects": [
+        "Stop inflow of tank T-401"
+      ],
+      "actions": [
+        {
+          "action": "close"
+        }
+      ],
+      "actions_text": "Close P-302",
+      "stages": [
+        "P3"
+      ]
+    },
+    {
+      "id": "A29",
+      "type": "SSMP",
+      "stage": "P2",
+      "points": [
+        "P-201",
+        "P-203",
+        "P-205"
+      ],
+      "intent": "Wastage of chemicals",
+      "expected_effects": [
+        "Wastage of chemicals"
+      ],
+      "actions": [
+        {
+          "action": "turn_on"
+        }
+      ],
+      "actions_text": "Turn on P-201; Turn on P-203; Turn on P-205",
+      "unexpected_outcome": "The three dosing pump did not start due to mechanical interlock",
+      "stages": [
+        "P2"
+      ]
+    },
+    {
+      "id": "A30",
+      "type": "MSMP",
+      "stage": "MULTI",
+      "points": [
+        "LIT-101",
+        "P-101",
+        "MV-201"
+      ],
+      "intent": "Tank 101 underflow; Tank 301 overflow",
+      "expected_effects": [
+        "Tank 101 underflow",
+        "Tank 301 overflow"
+      ],
+      "actions": [
+        {
+          "action": "unspecified"
+        }
+      ],
+      "actions_text": "Turn P-101 on continuously; Turn MV-101 on; ...",
+      "stages": [
+        "P1",
+        "P2"
+      ]
+    },
+    {
+      "id": "A31",
+      "type": "SSSP",
+      "stage": "P4",
+      "points": [
+        "LIT-401"
+      ],
+      "intent": "Tank overflow",
+      "expected_effects": [
+        "Tank overflow"
+      ],
+      "actions": [
+        {
+          "action": "spoof_set"
+        }
+      ],
+      "actions_text": "Set LIT-401 to less than L",
+      "stages": [
+        "P4"
+      ]
+    },
+    {
+      "id": "A32",
+      "type": "SSSP",
+      "stage": "P3",
+      "points": [
+        "LIT-301"
+      ],
+      "intent": "Tank underflow; Damage P-302",
+      "expected_effects": [
+        "Tank underflow",
+        "Damage P-302"
+      ],
+      "actions": [
+        {
+          "action": "spoof_set"
+        }
+      ],
+      "actions_text": "Set LIT-301 to above HH",
+      "stages": [
+        "P3"
+      ]
+    },
+    {
+      "id": "A33",
+      "type": "SSSP",
+      "stage": "P1",
+      "points": [
+        "LIT-101"
+      ],
+      "intent": "Tank underflow; Damage P-101",
+      "expected_effects": [
+        "Tank underflow",
+        "Damage P-101"
+      ],
+      "actions": [
+        {
+          "action": "spoof_set"
+        }
+      ],
+      "actions_text": "Set LIT-101 to above H",
+      "stages": [
+        "P1"
+      ]
+    },
+    {
+      "id": "A34",
+      "type": "SSSP",
+      "stage": "P1",
+      "points": [
+        "P-101"
+      ],
+      "intent": "Stops outflow",
+      "expected_effects": [
+        "Stops outflow"
+      ],
+      "actions": [
+        {
+          "action": "unspecified"
+        }
+      ],
+      "actions_text": "Turn P-101 off",
+      "unexpected_outcome": "Outflow did not stop because system turned on P-102",
+      "stages": [
+        "P1"
+      ]
+    },
+    {
+      "id": "A35",
+      "type": "SSMP",
+      "stage": "P1",
+      "points": [
+        "P-101",
+        "P-102"
+      ],
+      "intent": "Stops outflow",
+      "expected_effects": [
+        "Stops outflow"
+      ],
+      "actions": [
+        {
+          "action": "turn_off"
+        }
+      ],
+      "actions_text": "Turn P-101 off; Keep P-102 off",
+      "stages": [
+        "P1"
+      ]
+    },
+    {
+      "id": "A36",
+      "type": "SSSP",
+      "stage": "P1",
+      "points": [
+        "LIT-101"
+      ],
+      "intent": "Tank overflow",
+      "expected_effects": [
+        "Tank overflow"
+      ],
+      "actions": [
+        {
+          "action": "spoof_set"
+        }
+      ],
+      "actions_text": "Set LIT-101 to less than LL",
+      "stages": [
+        "P1"
+      ]
+    },
+    {
+      "id": "A37",
+      "type": "SSMP",
+      "stage": "P5",
+      "points": [
+        "P-501",
+        "FIT-502"
+      ],
+      "intent": "Reduced output",
+      "expected_effects": [
+        "Reduced output"
+      ],
+      "actions": [
+        {
+          "action": "close"
+        },
+        {
+          "action": "spoof_set"
+        }
+      ],
+      "actions_text": "Close P-501; Set value of FIT-502 to 1.29 at ...",
+      "unexpected_outcome": "P-501 did not turn off; FIT-502 decreased to 0.8; P-501 speed increased",
+      "stages": [
+        "P5"
+      ]
+    },
+    {
+      "id": "A38",
+      "type": "MSMP",
+      "stage": "MULTI",
+      "points": [
+        "AIT-402",
+        "AIT-502"
+      ],
+      "intent": "Water goes to drain because of overdosing",
+      "expected_effects": [
+        "Water goes to drain because of overdosing"
+      ],
+      "actions": [
+        {
+          "action": "spoof_set"
+        }
+      ],
+      "actions_text": "Set value of AIT-402 as 260; Set value of AIT-502 ...",
+      "unexpected_outcome": "Water did not go to the drain",
+      "stages": [
+        "P4",
+        "P5"
+      ]
+    },
+    {
+      "id": "A39",
+      "type": "MSMP",
+      "stage": "MULTI",
+      "points": [
+        "FIT-401",
+        "AIT-502"
+      ],
+      "intent": "UV will shut down and water will go to RO",
+      "expected_effects": [
+        "UV will shut down and water will go to RO"
+      ],
+      "actions": [
+        {
+          "action": "spoof_set"
+        }
+      ],
+      "actions_text": "Set value of FIT-401 as 0.5; Set value of AIT-502 ...",
+      "unexpected_outcome": "UV did not shutdown",
+      "stages": [
+        "P4",
+        "P5"
+      ]
+    },
+    {
+      "id": "A40",
+      "type": "SSSP",
+      "stage": "P4",
+      "points": [
+        "FIT-401"
+      ],
+      "intent": "UV will shut down and water will go to RO",
+      "expected_effects": [
+        "UV will shut down and water will go to RO"
+      ],
+      "actions": [
+        {
+          "action": "spoof_set"
+        }
+      ],
+      "actions_text": "Set value of FIT-401 as 0",
+      "unexpected_outcome": "P-402 did not close, both should be interlinked",
+      "stages": [
+        "P4"
+      ]
+    },
+    {
+      "id": "A41",
+      "type": "SSSP",
+      "stage": "P3",
+      "points": [
+        "LIT-301"
+      ],
+      "intent": "Tank overflow",
+      "expected_effects": [
+        "Tank overflow"
+      ],
+      "actions": [
+        {
+          "action": "spoof_decrease"
+        }
+      ],
+      "actions_text": "decrease value by 0.5 mm per second",
+      "unexpected_outcome": "Rate of decrease reduced after 1:33:25 PM",
+      "stages": [
+        "P3"
+      ]
+    }
+  ],
+  "data_stream": {
+    "modes": [
+      "normal",
+      "attack"
+    ]
+  },
+  "invariants": [
+    {
+      "id": "INV.VALVE_CLOSED_NO_FLOW",
+      "description": "CLOSED valve implies near-zero downstream flow.",
+      "applies_to": {
+        "valve_type": "motorized_valve",
+        "flow_sensor_type": "flow"
+      }
+    },
+    {
+      "id": "INV.PUMP_ON_LEVEL_DECREASES",
+      "description": "Feed pump ON tends to decrease source tank level over time.",
+      "applies_to": {
+        "actuator_type": "pump",
+        "level_sensor_type": "level"
+      }
+    }
+  ],
+  "setpoints": [
+    {
+      "id": "SP.P1.LIT101.LL_OK",
+      "name": "Low Level OK threshold",
+      "applies_to": "LIT-101",
+      "feature_type": "level_mm",
+      "level": "LL_OK"
+    },
+    {
+      "id": "SP.P3.LIT301.LL_OK",
+      "name": "Low Level OK threshold",
+      "applies_to": "LIT-301",
+      "feature_type": "level_mm",
+      "level": "LL_OK"
+    },
+    {
+      "id": "SP.P4.FIT401.MIN_FLOW",
+      "name": "Minimum Flow for UV",
+      "applies_to": "FIT-401",
+      "feature_type": "flow_lpm",
+      "level": "MIN_FLOW"
+    },
+    {
+      "id": "SP.P3.DPIT301.HI",
+      "name": "High Differential Pressure",
+      "applies_to": "DPIT-301",
+      "feature_type": "dp_bar",
+      "level": "HI"
+    }
+  ]
+}
