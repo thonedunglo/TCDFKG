@@ -69,6 +69,12 @@ class TCDF(nn.Module):
     def fit(self, X: np.ndarray, epochs=20, lr=1e-3, batch_size=64, verbose=True):
         # X: (N,T)
         N, T = X.shape; assert N == self.N
+        num_windows = T - self.w
+        if num_windows <= 0:
+            raise ValueError(
+                f"TCDF.fit needs at least one window but got X.shape={X.shape}, "
+                f"window={self.w} -> {num_windows} windows"
+            )
         windows, targets = [], []
         for t in range(self.w, T):
             windows.append(X[:, t-self.w:t]); targets.append(X[:, t])
