@@ -46,7 +46,7 @@ class KGVerifier:
                     ft = src.get("feature_type")
                     if ft:
                         G.add_node(f"Feature::{ft}")
-                        G.add_edge(f"Rule::{rule_ref}", f"Feature::{ft}")
+                        G.add_edge(f"Feature::{ft}", f"Rule::{rule_ref}")  # feature triggers rule
         return G
 
     def _s_struct(self, type_i: str, type_j: str) -> float:
