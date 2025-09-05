@@ -67,7 +67,8 @@ def main():
 
     ds_tr = WindowDataset(Xn, w=w, start=0, end=cut)
     ds_va = WindowDataset(Xn, w=w, start=cut, end=T)
-    dl_tr = DataLoader(ds_tr, batch_size=cfg.model_causal.get("training", {}).get("batch_size", 64), shuffle=True)
+    tr_cfg = cfg.model_causal.get("training", {})
+    dl_tr = DataLoader(ds_tr, batch_size=int(tr_cfg.get("batch_size", 64)), shuffle=True)
     dl_va = DataLoader(ds_va, batch_size=256, shuffle=False)
 
     # load TCG
@@ -76,9 +77,9 @@ def main():
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     det = Detector(enc_cfg=enc_cfg, attn_cfg=attn_cfg, tcg=tcg, device=str(device))
     # train
-    lr = cfg.model_causal.get("training", {}).get("lr", 1e-3)
-    epochs = cfg.model_causal.get("training", {}).get("epochs", 50)
-    early = cfg.model_causal.get("training", {}).get("early_stop", 7)
+    lr = float(tr_cfg.get("lr", 1e-3))
+    epochs = int(tr_cfg.get("epochs", 50))
+    early = int(tr_cfg.get("early_stop", 7))
     det.fit(dl_tr, dl_va, lr=lr, epochs=epochs, early_stop=early)
 
     os.makedirs(args.save_dir, exist_ok=True)
@@ -94,12 +95,13 @@ def main():
             errs.append((yhat - yb).abs().cpu().numpy())
     errors_val = np.concatenate(errs, axis=0)  # (T_val, N)
     # MAD + POT
-    norm = MadNormalizer(eps=cfg.model_causal.get("threshold", {}).get("eps_mad", 1e-6))
+    th_cfg = cfg.model_causal.get("threshold", {})
+    norm = MadNormalizer(eps=float(th_cfg.get("eps_mad", 1e-6)))
     norm.fit(errors_val)
     pot = PotPerFeature(
-        q0=cfg.model_causal.get("threshold", {}).get("pot_q0", 0.95),
-        gamma=cfg.model_causal.get("threshold", {}).get("pot_gamma", 0.99),
-        min_exceed=cfg.model_causal.get("threshold", {}).get("pot_min_exceed", 50),
+        q0=float(th_cfg.get("pot_q0", 0.95)),
+        gamma=float(th_cfg.get("pot_gamma", 0.99)),
+        min_exceed=int(th_cfg.get("pot_min_exceed", 50)),
     )
     a_val = norm.transform(errors_val)
     taus = pot.fit(a_val)
