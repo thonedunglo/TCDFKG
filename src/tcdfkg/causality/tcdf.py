@@ -80,7 +80,7 @@ class TCDF(nn.Module):
             windows.append(X[:, t-self.w:t]); targets.append(X[:, t])
         Xw = torch.tensor(np.stack(windows), dtype=torch.float32, device=self.device)  # (B,N,w)
         Yt = torch.tensor(np.stack(targets), dtype=torch.float32, device=self.device)  # (B,N)
-        opt = torch.optim.Adam(self.parameters(), lr=lr); mse = nn.MSELoss()
+        opt = torch.optim.Adam(self.parameters(), lr=float(lr)); mse = nn.MSELoss()
         for ep in range(epochs):
             self.train(); loss_sum = 0.0
             idx = torch.randperm(Xw.shape[0])

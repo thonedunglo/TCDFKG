@@ -1,5 +1,5 @@
 tcdf:
-  window: 128  # keep < sequence length (162) to ensure at least one training window
+  window: 64  # keep < sequence length (162) to ensure at least one training window
   dilations: [1,2,4,8,16]
   kernel_size: 3
   channels: 64

@@ -150,7 +150,6 @@ Script **không cắt outlier**, chỉ resample/align/impute/split.
 python -m scripts.prepare_data \
   --dataset_yaml configs/dataset.yaml \
   --input data/raw \
-  --freq 1min \
   --val_ratio 0.1 --test_ratio 0.1 \
   --impute ffill_bfill
 ```
@@ -172,7 +171,6 @@ python -m scripts.build_tcg \
   --dataset_yaml configs/dataset.yaml \
   --model_causal_yaml configs/model_causal.yaml \
   --save_dir artifacts \
-  --device cpu \
   --seed 42
 ```
 

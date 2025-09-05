@@ -1,0 +1,31 @@
+{
+  "freq": "1min",
+  "columns": [
+    "0",
+    "1",
+    "2",
+    "3",
+    "4"
+  ],
+  "shape": {
+    "train": [
+      162,
+      5
+    ],
+    "val": [
+      18,
+      5
+    ],
+    "test": [
+      20,
+      5
+    ]
+  },
+  "split": {
+    "train": 162,
+    "val": 18,
+    "test": 20
+  },
+  "impute": "ffill_bfill",
+  "outlier_clip": false
+}

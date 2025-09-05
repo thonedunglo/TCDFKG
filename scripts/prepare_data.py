@@ -68,7 +68,10 @@ def main():
 
     # 2) Resample & align (không đụng giá trị ngoại lai)
     if freq:
-        df = resample_df(df, rule=freq, how="mean")  # cần robust hơn thì đổi 'median'
+        if "timestamp" in df.columns or isinstance(df.index, pd.DatetimeIndex):
+            df = resample_df(df, rule=freq, how="mean")
+        else:
+            print("[prepare] skip resample (no timestamp found)")  # cần robust hơn thì đổi 'median'
         print(f"[prepare] resampled to freq={freq} shape={df.shape}")
     df = align_columns(df)
 
