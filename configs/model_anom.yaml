@@ -1,5 +1,5 @@
 encoder:
-  window: 256
+  window: 64
   channels: 128
   kernels: [2,3,5,6]
 attention:
