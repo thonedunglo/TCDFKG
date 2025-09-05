@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tcdfkg"
+version = "0.1.0"
+description = "Hybrid TCDF + KG verification for temporal causal graph"
+dependencies = [
+  "numpy","pandas","pyyaml","scikit-learn",
+  "networkx","tqdm","matplotlib",
+  "torch","torchaudio","torchvision",
+  "scipy"
+]
+requires-python = ">=3.9"

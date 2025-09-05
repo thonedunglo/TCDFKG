@@ -1,0 +1,65 @@
+tcdfkg/
+├─ README.md
+├─ pyproject.toml                 # hoặc requirements.txt
+├─ .env.example                   # biến môi trường (đường dẫn DB/KG, logging,…)
+├─ configs/
+│  ├─ dataset.yaml                # đường dẫn dữ liệu MTS, schema/rules
+│  ├─ model_causal.yaml           # siêu tham số TCDF & validate
+│  ├─ model_anom.yaml             # siêu tham số encoder/attention/POT
+│  └─ training.yaml               # batch, lr, optimizer, seed, early_stop
+├─ data/
+│  ├─ raw/                        # dữ liệu thô (MTS gốc, log sự kiện)
+│  ├─ interim/                    # sau tiền xử lý (chuẩn hóa, align time)
+│  ├─ processed/                  # đã tạo window, split train/val/test
+│  └─ kg/
+│     ├─ extracted_schema.json    # (bạn đã có)
+│     └─ rules.json               # rule/event bổ sung (nếu có)
+├─ notebooks/
+│  ├─ 00_eda.ipynb                # EDA tín hiệu & missing
+│  ├─ 01_tcdf_debug.ipynb         # kiểm thử TCDF trên toy data
+│  └─ 02_anomaly_sanity.ipynb     # sanity check MAD/POT
+├─ scripts/
+│  ├─ prepare_data.py             # load + resample + normalize + window
+│  ├─ build_tcg.py                # chạy TCDF → KG verify → lưu TCG
+│  ├─ train_detector.py           # huấn luyện Edge-bias detector
+│  ├─ evaluate.py                 # đánh giá causal/anomaly
+│  └─ run_pipeline.py             # end-to-end: prepare → TCG → train → eval
+├─ src/
+│  └─ tcdfkg/
+│     ├─ __init__.py
+│     ├─ utils/
+│     │  ├─ config.py             # load/merge YAML, Hydra-like
+│     │  ├─ logging.py            # logger cấu hình
+│     │  ├─ seed.py               # fix seed
+│     │  └─ metrics.py            # tiện ích AUC/AUPRC/F1…
+│     ├─ data/
+│     │  ├─ loaders.py            # đọc CSV/Parquet → DataFrame
+│     │  ├─ preprocessing.py      # align, impute, scale (zscore/robust)
+│     │  └─ windows.py            # tạo sliding windows (w, stride)
+│     ├─ kg/
+│     │  ├─ schema.py             # model hóa Machine/Component/Sensor/Feature/Rule/Event
+│     │  ├─ rules.py              # load & chuẩn hóa rules → predicate
+│     │  ├─ verification.py       # Sstruct, Stype, Srule, (tuỳ chọn) Slag, Sdir
+│     │  └─ graph_store.py        # adapter (JSON/NetworkX/Neo4j — tùy chọn)
+│     ├─ causality/
+│     │  ├─ tcdf.py               # TCDF backbone (attention + dilation)
+│     │  ├─ delay.py              # ước lượng d̂i→j từ kernel/dilation
+│     │  ├─ scorer.py             # s_att, SKG, hợp nhất S = (1-λ)* + λ*
+│     │  └─ tcg.py                # struct TCG + IO (save/load .json/.gpickle)
+│     ├─ anomaly/
+│     │  ├─ temporal_encoder.py   # TempEnc: causal conv/inception
+│     │  ├─ edge_bias_attn.py     # attention + bias từ e_ij=[Snorm, dnorm]
+│     │  ├─ detector.py           # head dự báo x̂, training L2
+│     │  ├─ mad.py                # Median & MAD chuẩn hóa lỗi
+│     │  └─ pot.py                # POT threshold theo feature
+│     ├─ propagation/
+│     │  └─ propagate.py          # dự báo lan truyền p_j,t+Δ qua TCG
+│     └─ eval/
+│        ├─ metrics_causal.py     # Precision/Recall/SHD/Domain-consistency
+│        └─ metrics_anom.py       # Precision/Recall/F1/AUC (per-feature & global)
+├─ tests/
+│  ├─ test_kg_verification.py
+│  ├─ test_tcdf_delay.py
+│  ├─ test_edge_bias_attn.py
+│  └─ test_pot_threshold.py
+└─ Makefile 

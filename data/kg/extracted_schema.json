@@ -1,0 +1,473 @@
+  "machines": [
+    {
+      "name": "Plastics Injection Moulding Machine",
+      "model": "JU10800/8550SE",
+      "vendor": "Haitian Plastics Machinery Group Co., Ltd.",
+      "components": [
+        {
+          "name": "Hydraulic system",
+          "type": null,
+          "sensors": []
+        },
+        {
+          "name": "Cooling system",
+          "type": null,
+          "sensors": [
+            {
+              "name": "Oil temperature sensor",
+              "modality": "temperature",
+              "range": "<55 ℃",
+              "mountedOn": "Cooling system"
+            }
+          ]
+        },
+        {
+          "name": "Electrical system",
+          "type": null,
+          "sensors": [
+            {
+              "name": "Indicator light",
+              "modality": "other",
+              "range": null,
+              "mountedOn": "Electrical system"
+            },
+            {
+              "name": "Thermocouple K-ф2.3-L100-5.5M",
+              "modality": "temperature",
+              "range": null,
+              "mountedOn": "Electrical system"
+            },
+            {
+              "name": "Fuse MIND70V32A",
+              "modality": "other",
+              "range": null,
+              "mountedOn": "Electrical system"
+            }
+          ]
+        },
+        {
+          "name": "Heating Band",
+          "type": null,
+          "sensors": []
+        }
+      ],
+      "feature_types": [
+        {
+          "name": "Coaxial tolerance between axes of nozzle and fixed plate",
+          "unit": "mm"
+        },
+        {
+          "name": "Parallel tolerance of mould mounting plane",
+          "unit": "mm"
+        },
+        {
+          "name": "Parallel tolerance of moving plate and fixed plate",
+          "unit": "mm"
+        },
+        {
+          "name": "Hydraulic system leakage",
+          "unit": null
+        },
+        {
+          "name": "Cooling oil temperature",
+          "unit": "℃"
+        },
+        {
+          "name": "Noise level",
+          "unit": "db"
+        }
+      ]
+    },
+    {
+      "name": "Haitian Jupiter Series",
+      "model": null,
+      "vendor": "Haitian",
+      "components": [],
+      "feature_types": []
+    },
+    {
+      "name": "Haitian Jupiter Series Injection Molding Machine",
+      "model": null,
+      "vendor": "Haitian",
+      "components": [
+        {
+          "name": "Mold Locking System",
+          "type": "locking system",
+          "sensors": [
+            {
+              "name": "Locking Cavity Pressure Sensor",
+              "modality": "pressure",
+              "range": null,
+              "mountedOn": "Mold Locking System"
+            }
+          ]
+        }
+      ],
+      "feature_types": [
+        {
+          "name": "Locking Pressure",
+          "unit": "percentage of rated locking pressure"
+        }
+      ]
+    },
+    {
+      "name": "Injection Molding Machine",
+      "model": "Jupiter Series",
+      "vendor": "Haitian",
+      "components": [
+        {
+          "name": "Clamping Unit",
+          "type": "clamping",
+          "sensors": []
+        },
+        {
+          "name": "Nozzle",
+          "type": "injection",
+          "sensors": []
+        }
+      ],
+      "feature_types": []
+    },
+    {
+      "name": "Injection Molding Machine",
+      "model": null,
+      "vendor": "Haitian",
+      "components": [],
+      "feature_types": []
+    }
+  ],
+  "procedures": [
+    {
+      "name": "Precision Test",
+      "description": "Test to verify machine tolerances, safety system reliability, hydraulic system integrity, cooling efficiency, electrical system functionality, noise level, and machine appearance.",
+      "steps": [
+        {
+          "name": "Check coaxial tolerance",
+          "description": "Measure coaxial tolerance between axes of nozzle and fixed plate, must be ≤ 0.30 mm.",
+          "inputs": [],
+          "outputs": []
+        },
+        {
+          "name": "Check parallel tolerance of mould mounting plane",
+          "description": "Measure parallel tolerance of mould mounting plane, must be ≤ 0.1 mm (concave permitted).",
+          "inputs": [],
+          "outputs": []
+        },
+        {
+          "name": "Verify safety system reliability",
+          "description": "Confirm safety guard combined lock system and low-pressure protection system are sensitive and reliable.",
+          "inputs": [],
+          "outputs": []
+        },
+        {
+          "name": "Check parallel tolerance of moving and fixed plates",
+          "description": "Measure parallel tolerance of moving plate and fixed plate under maximal and zero clamping force, must be ≤ 0.30 mm and ≤ 0.60 mm respectively.",
+          "inputs": [],
+          "outputs": []
+        },
+        {
+          "name": "Inspect hydraulic system",
+          "description": "Verify no leakage and no crawl in hydraulic system.",
+          "inputs": [],
+          "outputs": []
+        },
+        {
+          "name": "Test cooling efficiency",
+          "description": "Run machine continuously for 1 hour and verify oil temperature remains below 55 ℃.",
+          "inputs": [],
+          "outputs": []
+        },
+        {
+          "name": "Check electrical system",
+          "description": "Verify indicator light shows correctly and actions are reliable.",
+          "inputs": [],
+          "outputs": []
+        },
+        {
+          "name": "Measure noise level",
+          "description": "Ensure noise level is ≤ 71 db.",
+          "inputs": [],
+          "outputs": []
+        },
+        {
+          "name": "Inspect machine appearance",
+          "description": "Confirm machine is correctly installed, neat, and nice-looking.",
+          "inputs": [],
+          "outputs": []
+        }
+      ]
+    },
+    {
+      "name": "Safety device LOTO Operation Flow",
+      "description": null,
+      "steps": []
+    },
+    {
+      "name": "Personnel Qualification and Work Authorization",
+      "description": "Defines the qualifications and authorization requirements for personnel operating or working on the injection molding machine and its components.",
+      "steps": [
+        {
+          "name": "Operator Authorization",
+          "description": "Only trained and instructed personnel familiar with operating instructions and hazards are allowed to operate the machine.",
+          "inputs": [],
+          "outputs": []
+        },
+        {
+          "name": "Specialist Personnel for Transport, Assembly, and Maintenance",
+          "description": "Transport, assembly, installation, commissioning, mold changing, maintenance, repair, troubleshooting, and malfunction rectification require trained specialist personnel.",
+          "inputs": [],
+          "outputs": []
+        },
+        {
+          "name": "Electrical Work Authorization",
+          "description": "Work on electrical equipment is only allowed by electricians or instructed personnel under electrician supervision, following electrical engineering rules.",
+          "inputs": [],
+          "outputs": []
+        },
+        {
+          "name": "Pneumatics Specialist Authorization",
+          "description": "Only personnel with special skills and experience in pneumatics, able to read pneumatic diagrams, understand safety features, and know pneumatic components, may work on pneumatic components.",
+          "inputs": [],
+          "outputs": []
+        },
+        {
+          "name": "Hydraulics Specialist Authorization",
+          "description": "Only personnel with special skills and experience in hydraulics, able to read hydraulic diagrams, understand safety features, and know hydraulic components, may work on hydraulic components.",
+          "inputs": [],
+          "outputs": []
+        }
+      ]
+    },
+    {
+      "name": "Workplace and Access Safety",
+      "description": "Requirements for operator workplaces and access points to ensure safety during operation and maintenance.",
+      "steps": [
+        {
+          "name": "Use of Marked Locations",
+          "description": "Only use marked locations as access points or workplaces as shown in specified figures.",
+          "inputs": [],
+          "outputs": []
+        },
+        {
+          "name": "Correct Positioning for Work",
+          "description": "Operations must be carried out in the correct position when entering the workplace for work or maintenance.",
+          "inputs": [],
+          "outputs": []
+        },
+        {
+          "name": "Use of Supporting Platforms and Access Facilities",
+          "description": "Use supporting working platforms or auxiliary fixed/non-fixed access facilities as necessary to meet safety requirements.",
+          "inputs": [],
+          "outputs": []
+        },
+        {
+          "name": "Compliance with ISO 14122",
+          "description": "Facilities shall comply with the requirements of ISO 14122.",
+          "inputs": [],
+          "outputs": []
+        }
+      ]
+    }
+  ],
+  "rules": [
+    {
+      "name": "Coaxial tolerance limit",
+      "scope": "machine",
+      "logic": [
+        {
+          "of_component": null,
+          "feature_type": "Coaxial tolerance between axes of nozzle and fixed plate",
+          "op": "<=",
+          "value": 0.3,
+          "unit": "mm"
+        }
+      ],
+      "on_true": {
+        "emit_event": null
+      }
+    },
+    {
+      "name": "Parallel tolerance mould mounting plane limit",
+      "scope": "machine",
+      "logic": [
+        {
+          "of_component": null,
+          "feature_type": "Parallel tolerance of mould mounting plane",
+          "op": "<=",
+          "value": 0.1,
+          "unit": "mm"
+        }
+      ],
+      "on_true": {
+        "emit_event": null
+      }
+    },
+    {
+      "name": "Parallel tolerance moving plate limit at max clamping force",
+      "scope": "machine",
+      "logic": [
+        {
+          "of_component": null,
+          "feature_type": "Parallel tolerance of moving plate and fixed plate",
+          "op": "<=",
+          "value": 0.3,
+          "unit": "mm"
+        }
+      ],
+      "on_true": {
+        "emit_event": null
+      }
+    },
+    {
+      "name": "Parallel tolerance moving plate limit at zero clamping force",
+      "scope": "machine",
+      "logic": [
+        {
+          "of_component": null,
+          "feature_type": "Parallel tolerance of moving plate and fixed plate",
+          "op": "<=",
+          "value": 0.6,
+          "unit": "mm"
+        }
+      ],
+      "on_true": {
+        "emit_event": null
+      }
+    },
+    {
+      "name": "Hydraulic system integrity",
+      "scope": "component",
+      "logic": [
+        {
+          "of_component": "Hydraulic system",
+          "feature_type": "Hydraulic system leakage",
+          "op": "==",
+          "value": 0,
+          "unit": null
+        }
+      ],
+      "on_true": {
+        "emit_event": null
+      }
+    },
+    {
+      "name": "Cooling oil temperature limit",
+      "scope": "component",
+      "logic": [
+        {
+          "of_component": "Cooling system",
+          "feature_type": "Cooling oil temperature",
+          "op": "<",
+          "value": 55,
+          "unit": "℃"
+        }
+      ],
+      "on_true": {
+        "emit_event": null
+      }
+    },
+    {
+      "name": "Noise level limit",
+      "scope": "machine",
+      "logic": [
+        {
+          "of_component": null,
+          "feature_type": "Noise level",
+          "op": "<=",
+          "value": 71,
+          "unit": "db"
+        }
+      ],
+      "on_true": {
+        "emit_event": null
+      }
+    },
+    {
+      "name": "Yellow Warning of Locking Pressure",
+      "scope": "component",
+      "logic": [
+        {
+          "of_component": "Mold Locking System",
+          "feature_type": "Locking Pressure",
+          "op": ">=",
+          "value": 5,
+          "unit": "percentage of rated locking pressure"
+        },
+        {
+          "of_component": "Mold Locking System",
+          "feature_type": "Locking Pressure",
+          "op": "<=",
+          "value": 10,
+          "unit": "percentage of rated locking pressure"
+        }
+      ],
+      "on_true": {
+        "emit_event": "Yellow Warning of Locking Pressure"
+      }
+    },
+    {
+      "name": "Red Warning of Locking Pressure",
+      "scope": "component",
+      "logic": [
+        {
+          "of_component": "Mold Locking System",
+          "feature_type": "Locking Pressure",
+          "op": ">",
+          "value": 10,
+          "unit": "percentage of rated locking pressure"
+        }
+      ],
+      "on_true": {
+        "emit_event": "Red Warning of Locking Pressure"
+      }
+    },
+    {
+      "name": "Safe Distance Compliance",
+      "scope": "system",
+      "logic": [
+        {
+          "of_component": null,
+          "feature_type": null,
+          "op": ">=",
+          "value": 500,
+          "unit": "mm"
+        }
+      ],
+      "on_true": {
+        "emit_event": null
+      }
+    }
+  ],
+  "events": [
+    {
+      "description": "Yellow warning when actual locking cavity pressure is over 5% to 10% of rated locking pressure; panel hints but does not stop the machine; manual reset required.",
+      "of_step": null,
+      "severity": "minor",
+      "category": "alarm",
+      "rule_ref": "Yellow Warning of Locking Pressure",
+      "sources": [
+        {
+          "component": "Mold Locking System",
+          "feature_type": "Locking Pressure"
+        }
+      ],
+      "targets": [],
+      "affect_type": "notify_only"
+    },
+    {
+      "description": "Red warning when actual locking cavity pressure exceeds 10% of rated locking pressure; machine action stops immediately; adjustment of injection parameters required.",
+      "of_step": null,
+      "severity": "critical",
+      "category": "safety",
+      "rule_ref": "Red Warning of Locking Pressure",
+      "sources": [
+        {
+          "component": "Mold Locking System",
+          "feature_type": "Locking Pressure"
+        }
+      ],
+      "targets": [],
+      "affect_type": "stop_machine"
+    }
+  ]
+}

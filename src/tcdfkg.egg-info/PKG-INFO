@@ -1,0 +1,16 @@
+Metadata-Version: 2.4
+Name: tcdfkg
+Version: 0.1.0
+Summary: Hybrid TCDF + KG verification for temporal causal graph
+Requires-Python: >=3.9
+Requires-Dist: numpy
+Requires-Dist: pandas
+Requires-Dist: pyyaml
+Requires-Dist: scikit-learn
+Requires-Dist: networkx
+Requires-Dist: tqdm
+Requires-Dist: matplotlib
+Requires-Dist: torch
+Requires-Dist: torchaudio
+Requires-Dist: torchvision
+Requires-Dist: scipy

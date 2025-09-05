@@ -1,0 +1,17 @@
+encoder:
+  window: 256
+  channels: 128
+  kernels: [2,3,5,6]
+attention:
+  dmax: 32
+  bias_mlp_hidden: 16
+training:
+  lr: 1e-3
+  batch_size: 64
+  epochs: 50
+  early_stop: 7
+threshold:
+  pot_q0: 0.95
+  pot_gamma: 0.99
+  pot_min_exceed: 50
+  eps_mad: 1e-6

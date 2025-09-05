@@ -1,0 +1,4 @@
+device: "cuda:1"     # hoặc "cuda:0"
+save_dir: "./artifacts"
+log_dir: "./runs"
+seed: 42

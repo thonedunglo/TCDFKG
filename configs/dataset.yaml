@@ -1,0 +1,14 @@
+data_dir: ./data
+raw_dir: ./data/raw
+processed_dir: ./data/processed
+mts:
+  train: ./data/processed/train.parquet
+  val:   ./data/processed/val.parquet
+  test:  ./data/processed/test.parquet
+kg:
+  schema_path: ./data/kg/extracted_schema.json
+time:
+  freq: "1min"        # nếu muốn resample
+split:
+  val_ratio: 0.1
+  test_ratio: 0.1

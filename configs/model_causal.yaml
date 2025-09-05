@@ -1,0 +1,21 @@
+tcdf:
+  window: 256
+  dilations: [1,2,4,8,16]
+  kernel_size: 3
+  channels: 64
+  dropout: 0.1
+  epochs: 20
+  lr: 1e-3
+  batch_size: 64
+  tau_att: 0.02
+  max_lag: 32
+
+verify:
+  lambda_mix: 0
+  alpha_struct: 0.5
+  beta_type: 0.3
+  delta_rule: 0.2
+  kappa_dist: 0.7
+
+select:
+  theta_edge: 0.15
