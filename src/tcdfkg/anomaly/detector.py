@@ -2,8 +2,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from typing import Dict, Tuple
-from .temporal_encoder import TempEnc
-from .edge_bias_attn import EdgeBiasAttention
+from src.tcdfkg.anomaly.temporal_encoder import TempEnc
+from src.tcdfkg.anomaly.edge_bias_attn import EdgeBiasAttention
 
 class Detector(nn.Module):
     """
